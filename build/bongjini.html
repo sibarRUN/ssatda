@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bongjini</title>
   <style>
+    /* 기존 스타일 유지 */
     body {
       font-family: 'Kaushan Script', sans-serif;
       background-image: url('suit.webp');
@@ -100,9 +101,8 @@
     <!-- 폼 영역 -->
     <div class="form-container">
       <h1>BONGENIE</h1>
-      <!-- 여기에 굳이 username/password로 로그인하는 부분을 제거 -->
-      <!-- 만약 로그인 안됐다면 경고 후 메인 페이지나 로그인 페이지로 이동 -->
-      
+      <!-- 로그인 영역 제거 -->
+
       <form onsubmit="handleSubmit(event)">
         <!-- 파일 업로드 -->
         <input type="file" accept="image/*" onchange="handleImageChange(event)">
@@ -133,8 +133,8 @@
   </div>
 
   <script>
+    // 올바른 API Gateway 엔드포인트 URL로 수정
     const apiUrl = 'https://ss1105fp1e.execute-api.ap-northeast-2.amazonaws.com/dev/invokeTrigger_ju';
-
 
     let uploadedBase64Image = null; 
     let userAccessToken = null; // 로그인 후 얻은 Access Token 저장용
@@ -183,6 +183,8 @@
         return;
       }
 
+      console.log('Submitting data:', { height, weight, uploadedBase64Image });
+
       try {
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -196,15 +198,20 @@
             file_data: uploadedBase64Image,
           }),
         });
-        
+
+        console.log('API response status:', response.status);
 
         if (!response.ok) {
-          throw new Error('API 호출 실패');
+          const errorData = await response.json();
+          console.error('API 호출 실패:', errorData);
+          throw new Error(`API 호출 실패: ${errorData.message || response.statusText}`);
         }
 
         const data = await response.json();
+        console.log('API response data:', data);
         alert(`Data processed successfully: ${JSON.stringify(data)}`);
       } catch (error) {
+        console.error('오류 발생:', error);
         alert(`오류: ${error.message}`);
       }
     };
