@@ -138,7 +138,8 @@
 
     let uploadedBase64Image = null; 
     let userAccessToken = null; // 로그인 후 얻은 Access Token 저장용
-
+    let idToken = null; // 로그인 후 얻은 idToken 저장용
+    
     // 페이지 로드 시 토큰 확인
     window.addEventListener('load', () => {
       const accessToken = localStorage.getItem('accessToken');
@@ -190,7 +191,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userAccessToken}`
+            'Authorization': `Bearer ${idToken}`
           },
           body: JSON.stringify({
             height: parseFloat(height),
